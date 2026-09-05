@@ -1,0 +1,17 @@
+{
+  "name": "ws",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/ws": "^8.18.1"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  },
+  "dependencies": {
+    "ws": "^8.21.3",
+    "db": "*"
+  }
+}
