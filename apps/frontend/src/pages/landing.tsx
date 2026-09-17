@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import { motion } from 'framer-motion';
 import './landing.css';
 
@@ -80,8 +81,13 @@ const LandingPage: React.FC = () => {
             <a href="#testimonials" className="nav-link">Testimonials</a>
           </div>
           <div className="auth-buttons">
-            <button className="btn-login">Login</button>
-            <button className="btn-signup">Sign Up</button>
+            <Link to="/login" className="btn-login">
+              Login
+            </Link>
+
+            <Link to="/signup" className="btn-signup">
+              Sign Up
+            </Link>
           </div>
         </div>
       </nav>
