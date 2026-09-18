@@ -13,7 +13,7 @@ const resend = new Resend(RESEND_API_KEY);
 export async function sendInviteEmail(to: string, orgName:string, inviteCode:string) {
     try{
         const {data, error} = await resend.emails.send({
-            from: "Trello Clone <invites@mail.sanskriti.xyz>",
+            from: "Teampulse <workhardandhard55@gmail.com>",
             to,
             subject: `You've been invited to join ${orgName}`,
             html: `<p>You've been invited to join <strong>${orgName}</strong>. Sign in, choose "Join an organization," and paste this invite code:</p><p><code>${inviteCode}</code></p>`,
@@ -32,7 +32,7 @@ export async function sendInviteEmail(to: string, orgName:string, inviteCode:str
 export async function sendPasswordResetEmail(to: string, code:string){
     try{
         const {data, error} = await resend.emails.send({
-            from: "Trello Clone <invite@mail.sanskriti.xyz>",
+            from: "Teampulse <workhardandhard55@gmail.com>",
             to,
             subject: "Reset your password",
             html: `<p>Your password reset code is:</p><p><code>${code}</code></p><p>This code expires in 15 minutes.</p>`,

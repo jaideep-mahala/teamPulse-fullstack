@@ -1,8 +1,9 @@
-// pages/Signup.tsx
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState } from 'react';
+import type { FormEvent, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import './Signup.css';
+import './signup.css';
+import axios from 'axios';
 
 interface SignupFormData {
   fullName: string;
@@ -146,19 +147,29 @@ const Signup: React.FC = () => {
     setErrors({});
 
     try {
-      // Simulate API call - replace with your actual API endpoint
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      // Store user data
-      localStorage.setItem('user', JSON.stringify({
-        fullName: formData.fullName,
-        email: formData.email,
-      }));
-      
-      // Navigate to dashboard
-      navigate('/dashboard');
+      const response = await axios.post(
+        'http://localhost:4000/api/v1/signup',
+        {
+          email: formData.email.trim(),
+          password: formData.password,
+          profile: '',
+          description: formData.description.trim(),
+        }
+      );
+
+      if (response.data.success) {
+        navigate('/login');
+      }
     } catch (error) {
-      setErrors({ general: 'Signup failed. Please try again.' });
+      if (axios.isAxiosError(error)) {
+        setErrors({
+          general:
+            error.response?.data?.error ||
+            'Signup failed. Please try again.',
+        });
+      } else {
+        setErrors({ general: 'Signup failed. Please try again.' });
+      }
     } finally {
       setIsLoading(false);
     }

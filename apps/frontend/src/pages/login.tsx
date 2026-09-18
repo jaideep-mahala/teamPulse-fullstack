@@ -1,8 +1,9 @@
-// pages/Login.tsx
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState } from 'react';
+import type { FormEvent, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import './Login.css';
+import './login.css';
+import axios from 'axios';
 
 interface LoginFormData {
   email: string;
@@ -63,23 +64,43 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
     setErrors({});
 
     try {
-      // Simulate API call - replace with your actual API endpoint
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      // Store token or user data as needed
-      localStorage.setItem('user', JSON.stringify({ email: formData.email }));
-      
-      // Navigate to dashboard
-      navigate('/dashboard');
+      const response = await axios.post(
+        'http://localhost:4000/api/v1/signin',
+        {
+          email: formData.email.trim(),
+          password: formData.password,
+        }
+      );
+
+      if (response.data.success) {
+        localStorage.setItem('authToken', response.data.data);
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            fullName: response.data.user?.fullName,
+            email: response.data.user?.email,
+          })
+        );
+
+        navigate('/dashboard');
+      }
     } catch (error) {
-      setErrors({ general: 'Invalid email or password. Please try again.' });
+      if (axios.isAxiosError(error)) {
+        setErrors({
+          general:
+            error.response?.data?.error ||
+            'Login failed. Please check your credentials and try again.',
+        });
+      } else {
+        setErrors({ general: 'Login failed. Please try again.' });
+      }
     } finally {
       setIsLoading(false);
     }
