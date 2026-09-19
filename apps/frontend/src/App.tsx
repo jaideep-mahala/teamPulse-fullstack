@@ -5,6 +5,7 @@ import Login from './pages/login.tsx';
 import Signup from './pages/signup.tsx';
 import Dashboard from './pages/dashboard.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
+import OAuthCallback from './pages/oauth-callback.tsx';
 
 
 export function App() {
@@ -14,6 +15,7 @@ export function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/oauth-callback" element={<OAuthCallback />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>

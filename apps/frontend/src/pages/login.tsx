@@ -80,8 +80,8 @@ const Login: React.FC = () => {
       );
 
       if (response.data.success) {
-        localStorage.setItem('authToken', response.data.data);
-        localStorage.setItem(
+        sessionStorage.setItem('authToken', response.data.data);
+        sessionStorage.setItem(
           'user',
           JSON.stringify({
             fullName: response.data.user?.fullName,
@@ -107,17 +107,7 @@ const Login: React.FC = () => {
   };
 
   const handleGoogleLogin = async (): Promise<void> => {
-    try {
-      setIsLoading(true);
-      // Simulate Google OAuth - replace with your actual Google OAuth implementation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log('Google login initiated');
-      // window.location.href = 'your-google-oauth-url';
-    } catch (error) {
-      setErrors({ general: 'Google login failed. Please try again.' });
-    } finally {
-      setIsLoading(false);
-    }
+    window.location.assign('http://localhost:4000/api/v1/auth/google');
   };
 
   return (
