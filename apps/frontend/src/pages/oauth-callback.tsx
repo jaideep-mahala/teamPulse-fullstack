@@ -17,7 +17,7 @@ const OAuthCallback = (): JSX.Element => {
     }
 
     sessionStorage.setItem('authToken', token);
-    navigate('/dashboard', { replace: true });
+    navigate('/organisation', { replace: true });
   }, [navigate, searchParams]);
 
   return <p>Signing you in...</p>;

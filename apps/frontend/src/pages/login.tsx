@@ -89,7 +89,7 @@ const Login: React.FC = () => {
           })
         );
 
-        navigate('/dashboard');
+        navigate('/organisation');
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

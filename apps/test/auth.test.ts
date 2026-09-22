@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import {expect , it, describe , mock } from "bun:test";
 
 const USER_EMAIL = `Harkirat${Math.random()}@gmail.com`;
-const BACKEND_URL ="http://localhost:3000"
+const BACKEND_URL ="http://localhost:4000"
 
 describe("authorization", () =>{
     it("signup doesn't work if email is not provided",async()=>{

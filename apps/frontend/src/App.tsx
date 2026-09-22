@@ -3,10 +3,9 @@ import React from 'react';
 import LandingPage from './pages/landing.tsx';
 import Login from './pages/login.tsx';
 import Signup from './pages/signup.tsx';
-import Dashboard from './pages/dashboard.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 import OAuthCallback from './pages/oauth-callback.tsx';
-
+import OrganizationPopup from './pages/org.tsx';
 
 export function App() {
   return (
@@ -17,7 +16,7 @@ export function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/oauth-callback" element={<OAuthCallback />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/organisation" element={<OrganizationPopup />} />
         </Route>
       </Routes>
     </BrowserRouter>
