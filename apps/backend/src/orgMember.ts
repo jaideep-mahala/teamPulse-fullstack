@@ -4,8 +4,6 @@ import { prisma } from "db/client";
 
 import { authMiddleware } from "../helper/authMiddleware";
 import { hasRole } from "../helper/hasRole";
-import { sendInviteEmail } from "../helper/email";
-import { da } from "zod/locales";
 
 const router = express.Router();
 
@@ -54,15 +52,9 @@ router.post(
       },
     });
 
-    const org = await prisma.organization.findUnique({
-      where:{
-        id:data.orgId
-      }
-    })
-    sendInviteEmail(data.email , org?.name ?? "an organization", invitation.id);
-
     return res.status(200).json({
       success: true,
+      data: { inviteId: invitation.id },
       msg: "INVITATION_SENT",
     });
   },
@@ -73,7 +65,7 @@ router.post(
   authMiddleware,
   async (req: Request, res: Response) => {
     const userId = req.id;
-    const inviteId = req.params.inviteId as string;
+    const inviteId = (req.params.inviteId as string).trim();
 
     const invite = await prisma.invitation.findUnique({
       where: {
@@ -100,10 +92,13 @@ router.post(
       },
     });
 
-    if (user?.email !== invite.email) {
+    if (
+      !user ||
+      user.email.trim().toLowerCase() !== invite.email.trim().toLowerCase()
+    ) {
       return res.status(403).json({
         success: false,
-        error: "INVITATION_NOT_FOUND",
+        error: "INVITATION_EMAIL_MISMATCH",
       });
     }
 
@@ -137,6 +132,7 @@ router.post(
 
     return res.status(200).json({
       success: true,
+      data: { orgId: invite.orgId },
       msg: "INVITATION_ACCEPTED.",
     });
   },

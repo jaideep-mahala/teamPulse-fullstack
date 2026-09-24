@@ -43,8 +43,18 @@ router.post("/api/v1/signup", async (req: Request, res: Response) => {
       description: data.description,
     },
   });
+
+  const token = jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+    },
+    JWT_SECRET,
+  );
+
   return res.status(200).json({
     success: true,
+    data: token,
     msg: "SUCCESSFULLY_SIGNEDUP",
   });
 });

@@ -158,7 +158,14 @@ const Signup: React.FC = () => {
       );
 
       if (response.data.success) {
-        navigate('/login');
+        sessionStorage.setItem('authToken', response.data.data);
+        sessionStorage.setItem(
+          'user',
+          JSON.stringify({
+            email: formData.email.trim(),
+          })
+        );
+        navigate('/organisation');
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

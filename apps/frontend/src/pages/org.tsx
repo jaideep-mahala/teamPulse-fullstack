@@ -1,39 +1,92 @@
 import { useState, type FormEvent } from "react";
+import axios from "axios";
+import { Link, useNavigate } from 'react-router-dom';
 import "./org.css";
 
 type PopupMode = "choice" | "create" | "join";
 
 const OrganizationPopup = () => {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<PopupMode>("choice");
 
   const [organizationName, setOrganizationName] = useState("");
   const [description, setDescription] = useState("");
   const [inviteCode, setInviteCode] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleCreateOrganization = (e: FormEvent<HTMLFormElement>) => {
+  const handleCreateOrganization = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    setIsSubmitting(true);
 
-    console.log("Create Organization:", {
-      name: organizationName,
-      description: description,
-    });
+    try {
+      const token = sessionStorage.getItem("authToken");
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/organization/create",
+        {
+          name: organizationName.trim(),
+          description: description.trim(),
+        },
+        { headers: { Authorization: token ?? "" } },
+      );
 
-    // Backend API will be connected here later
+      if (!response.data.success) {
+        throw new Error(response.data.error || "Unable to create organization.");
+      } else {
+        navigate(`/dashboard/${response.data.data.id}`);
+      }
+
+      setMode("choice");
+      setOrganizationName("");
+      setDescription("");
+    } catch (requestError) {
+      setError(
+        axios.isAxiosError(requestError)
+          ? requestError.response?.data?.error || "Unable to create organization."
+          : "Unable to create organization.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleJoinOrganization = (e: FormEvent<HTMLFormElement>) => {
+  const handleJoinOrganization = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    setIsSubmitting(true);
 
-    console.log("Join Organization:", {
-      inviteCode,
-    });
+    try {
+      const token = sessionStorage.getItem("authToken");
+      const response = await axios.post(
+        `http://localhost:4000/api/v1/accept/${encodeURIComponent(inviteCode.trim())}`,
+        {},
+        { headers: { Authorization: token ?? "" } },
+      );
 
-    // Backend API will be connected here later
+      if (!response.data.success) {
+        throw new Error(response.data.error || "Unable to join organization.");
+      }
+
+      navigate(`/dashboard/${response.data.data.orgId}`);
+      setMode("choice");
+      setInviteCode("");
+    } catch (requestError) {
+      setError(
+        axios.isAxiosError(requestError)
+          ? requestError.response?.data?.error || "Unable to join organization."
+          : "Unable to join organization.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="organization-overlay">
       <div className="organization-popup">
+
+        {error && <p role="alert">{error}</p>}
 
         {/* Close Button */}
         <button
@@ -163,8 +216,9 @@ const OrganizationPopup = () => {
               <button
                 type="submit"
                 className="primary-button"
+                disabled={isSubmitting}
               >
-                Create Organization
+                {isSubmitting ? "Creating..." : "Create Organization"}
               </button>
 
             </form>
@@ -214,8 +268,9 @@ const OrganizationPopup = () => {
               <button
                 type="submit"
                 className="primary-button"
+                disabled={isSubmitting}
               >
-                Join Organization
+                {isSubmitting ? "Joining..." : "Join Organization"}
               </button>
 
             </form>

@@ -6,6 +6,7 @@ import Signup from './pages/signup.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 import OAuthCallback from './pages/oauth-callback.tsx';
 import OrganizationPopup from './pages/org.tsx';
+import Dashboard from './pages/dashboard.tsx';
 
 export function App() {
   return (
@@ -17,6 +18,8 @@ export function App() {
         <Route path="/oauth-callback" element={<OAuthCallback />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/organisation" element={<OrganizationPopup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/:orgId" element={<Dashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>
