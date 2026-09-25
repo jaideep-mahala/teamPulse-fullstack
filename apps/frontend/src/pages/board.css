@@ -1,0 +1,285 @@
+/* board.css
+   Styles for the single-board TeamPulse page (Board.tsx).
+   Palette and type follow the rest of TeamPulse: Space Grotesk for
+   headings/nav, Inter for body copy, dark surface with per-section accents.
+*/
+
+.board-page {
+  --board-bg: #0b0d10;
+  --board-surface: #14171b;
+  --board-surface-raised: #1c2025;
+  --board-border: #262b31;
+  --board-text: #e8eaed;
+  --board-text-dim: #8b9198;
+  --board-accent-upcoming: #7c8aa5;
+  --board-accent-progress: #e0a458;
+  --board-accent-done: #4fb286;
+  --board-accent-primary: #5b9dff;
+
+  min-height: 100vh;
+  background: var(--board-bg);
+  color: var(--board-text);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Navbar ---------- */
+
+.board-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--board-border);
+  background: var(--board-surface);
+}
+
+.board-navbar__crumb {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: "Space Grotesk", "Inter", sans-serif;
+}
+
+.board-navbar__org {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--board-text);
+}
+
+.board-navbar__sep {
+  color: var(--board-text-dim);
+  font-size: 1rem;
+}
+
+.board-navbar__part {
+  font-size: 1.15rem;
+  font-weight: 500;
+  padding: 2px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--board-border);
+}
+
+.board-navbar__part--frontend {
+  color: var(--board-accent-upcoming);
+  border-color: color-mix(in srgb, var(--board-accent-upcoming) 40%, var(--board-border));
+}
+
+.board-navbar__part--backend {
+  color: var(--board-accent-progress);
+  border-color: color-mix(in srgb, var(--board-accent-progress) 40%, var(--board-border));
+}
+
+.board-navbar__part--devops {
+  color: var(--board-accent-done);
+  border-color: color-mix(in srgb, var(--board-accent-done) 40%, var(--board-border));
+}
+
+.board-navbar__meta {
+  font-size: 0.85rem;
+  color: var(--board-text-dim);
+}
+
+/* ---------- Columns layout ---------- */
+
+.board-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  padding: 24px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .board-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.board-column {
+  background: var(--board-surface);
+  border: 1px solid var(--board-border);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 3px solid transparent;
+}
+
+.board-column--upcoming {
+  border-top-color: var(--board-accent-upcoming);
+}
+
+.board-column--inProgress {
+  border-top-color: var(--board-accent-progress);
+}
+
+.board-column--done {
+  border-top-color: var(--board-accent-done);
+}
+
+.board-column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.board-column__title {
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.board-column__count {
+  font-size: 0.8rem;
+  color: var(--board-text-dim);
+  background: var(--board-surface-raised);
+  border: 1px solid var(--board-border);
+  border-radius: 999px;
+  padding: 1px 9px;
+}
+
+.board-column__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 12px;
+}
+
+.board-column__empty {
+  color: var(--board-text-dim);
+  font-size: 0.85rem;
+  padding: 10px 2px;
+}
+
+/* ---------- Issue card ---------- */
+
+.board-issue {
+  width: 100%;
+  text-align: left;
+  background: var(--board-surface-raised);
+  border: 1px solid var(--board-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+}
+
+.board-issue:hover {
+  border-color: var(--board-accent-primary);
+}
+
+.board-issue:focus-visible {
+  outline: 2px solid var(--board-accent-primary);
+  outline-offset: 2px;
+}
+
+.board-issue__number {
+  font-size: 0.72rem;
+  color: var(--board-text-dim);
+}
+
+.board-issue__title {
+  font-size: 0.92rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.board-issue__comment-count {
+  font-size: 0.72rem;
+  color: var(--board-accent-primary);
+}
+
+.board-issue__advance {
+  margin-top: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.75rem;
+  color: var(--board-text-dim);
+  cursor: pointer;
+}
+
+.board-issue__advance:hover {
+  color: var(--board-accent-primary);
+  text-decoration: underline;
+}
+
+/* ---------- Add issue control + composer ---------- */
+
+.board-column__add {
+  align-self: flex-start;
+  background: none;
+  border: 1px dashed var(--board-border);
+  color: var(--board-text-dim);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.board-column__add:hover {
+  color: var(--board-text);
+  border-color: var(--board-accent-primary);
+}
+
+.board-composer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.board-composer__input {
+  background: var(--board-surface-raised);
+  border: 1px solid var(--board-accent-primary);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: var(--board-text);
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.board-composer__input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--board-accent-primary) 35%, transparent);
+}
+
+.board-composer__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.board-composer__submit {
+  background: var(--board-accent-primary);
+  color: #08101f;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.board-composer__cancel {
+  background: none;
+  border: 1px solid var(--board-border);
+  color: var(--board-text-dim);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.board-composer__cancel:hover {
+  color: var(--board-text);
+}

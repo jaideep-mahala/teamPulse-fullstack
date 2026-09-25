@@ -1,0 +1,138 @@
+/* issueModal.css
+   Styles for the issue popup (IssueModal.tsx) opened from a board card.
+*/
+
+.issue-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 5, 7, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 100;
+}
+
+.issue-modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: min(600px, 90vh);
+  display: flex;
+  flex-direction: column;
+  background: #14171b;
+  border: 1px solid #262b31;
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  color: #e8eaed;
+}
+
+.issue-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid #262b31;
+}
+
+.issue-modal__eyebrow {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  color: #8b9198;
+}
+
+.issue-modal__title {
+  margin: 0;
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.issue-modal__close {
+  background: none;
+  border: none;
+  color: #8b9198;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.issue-modal__close:hover {
+  color: #e8eaed;
+}
+
+.issue-modal__thread {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.issue-modal__empty {
+  color: #8b9198;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.issue-comment {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  background: #1c2025;
+  border: 1px solid #262b31;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.issue-comment__author {
+  font-weight: 600;
+  color: #5b9dff;
+}
+
+.issue-comment__text {
+  color: #e8eaed;
+}
+
+.issue-modal__composer {
+  display: flex;
+  gap: 8px;
+  padding: 14px 18px;
+  border-top: 1px solid #262b31;
+}
+
+.issue-modal__input {
+  flex: 1;
+  background: #1c2025;
+  border: 1px solid #262b31;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #e8eaed;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.issue-modal__input:focus {
+  outline: none;
+  border-color: #5b9dff;
+  box-shadow: 0 0 0 2px rgba(91, 157, 255, 0.25);
+}
+
+.issue-modal__submit {
+  background: #5b9dff;
+  color: #08101f;
+  border: none;
+  border-radius: 6px;
+  padding: 0 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.issue-modal__submit:hover {
+  filter: brightness(1.05);
+}

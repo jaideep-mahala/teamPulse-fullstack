@@ -1,9 +1,19 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import axios from "axios";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "./org.css";
 
 type PopupMode = "choice" | "create" | "join";
+
+type OrganizationMembership = {
+  id: string;
+  role: string;
+  organization: {
+    id: string;
+    name: string;
+    description?: string | null;
+  };
+};
 
 const OrganizationPopup = () => {
   const navigate = useNavigate();
@@ -12,8 +22,40 @@ const OrganizationPopup = () => {
   const [organizationName, setOrganizationName] = useState("");
   const [description, setDescription] = useState("");
   const [inviteCode, setInviteCode] = useState("");
+  const [memberships, setMemberships] = useState<OrganizationMembership[]>([]);
+  const [isLoadingMemberships, setIsLoadingMemberships] = useState(true);
+  const [membershipError, setMembershipError] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const loadMemberships = async () => {
+      try {
+        const token = sessionStorage.getItem("authToken");
+        const response = await axios.get(
+          "http://localhost:4000/api/v1/organization",
+          { headers: { Authorization: token ?? "" } },
+        );
+
+        if (!response.data.success) {
+          throw new Error("Unable to load organizations.");
+        }
+
+        const loadedMemberships: OrganizationMembership[] = response.data.data?.membership ?? [];
+        setMemberships(loadedMemberships);
+      } catch (requestError) {
+        setMembershipError(
+          axios.isAxiosError(requestError)
+            ? requestError.response?.data?.error || "Unable to load organizations."
+            : "Unable to load organizations.",
+        );
+      } finally {
+        setIsLoadingMemberships(false);
+      }
+    };
+
+    void loadMemberships();
+  }, []);
 
   const handleCreateOrganization = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -109,6 +151,30 @@ const OrganizationPopup = () => {
                 Choose how you want to continue
               </p>
             </div>
+
+            {(isLoadingMemberships || memberships.length > 0 || membershipError) && (
+              <section className="existing-organizations" aria-labelledby="existing-organizations-title">
+                <h2 id="existing-organizations-title">Your organizations</h2>
+                {isLoadingMemberships && <p className="organization-status">Loading organizations...</p>}
+                {membershipError && <p className="organization-status error-text" role="alert">{membershipError}</p>}
+                {!isLoadingMemberships && !membershipError && memberships.length === 0 && (
+                  <p className="organization-status">You are not a member of an organization yet.</p>
+                )}
+                <div className="existing-organization-list">
+                  {memberships.map((membership) => (
+                    <button
+                      key={membership.id}
+                      type="button"
+                      className="existing-organization"
+                      onClick={() => navigate(`/dashboard/${membership.organization.id}`)}
+                    >
+                      <span className="existing-organization-name">{membership.organization.name}</span>
+                      <span className="existing-organization-role">{membership.role}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
 
             <div className="organization-options">
 

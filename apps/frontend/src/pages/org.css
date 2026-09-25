@@ -11,6 +11,9 @@
   justify-content: center;
   align-items: center;
 
+  padding: 16px;
+  box-sizing: border-box;
+
   background: rgba(0, 0, 0, 0.45);
 
   backdrop-filter: blur(8px);
@@ -29,6 +32,9 @@
 
   width: 450px;
   max-width: 90%;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  box-sizing: border-box;
 
   padding: 35px;
 
@@ -125,6 +131,73 @@
   font-size: 14px;
 
   line-height: 1.5;
+}
+
+/* ========================================
+   EXISTING ORGANIZATIONS
+======================================== */
+
+.existing-organizations {
+  margin-bottom: 24px;
+}
+
+.existing-organizations h2 {
+  margin: 0 0 10px;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.organization-status {
+  margin: 0 0 10px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.error-text {
+  color: #b91c1c;
+}
+
+.existing-organization-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.existing-organization {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.existing-organization:hover {
+  border-color: #6366f1;
+  background: #e0e7ff;
+}
+
+.existing-organization-name {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.existing-organization-role {
+  flex-shrink: 0;
+  color: #4f46e5;
+  font-size: 12px;
+  text-transform: capitalize;
 }
 
 
