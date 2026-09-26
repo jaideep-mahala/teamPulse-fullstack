@@ -7,7 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute.tsx';
 import OAuthCallback from './pages/oauth-callback.tsx';
 import OrganizationPopup from './pages/org.tsx';
 import Dashboard from './pages/dashboard.tsx';
-import Board from './pages/board.tsx';
+import { BoardRoute } from './pages/board.tsx';
 
 export function App() {
   return (
@@ -16,12 +16,12 @@ export function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/board" element={<Board />} />
         <Route path="/oauth-callback" element={<OAuthCallback />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/organisation" element={<OrganizationPopup />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/:orgId" element={<Dashboard />} />
+          <Route path="/org/:orgId/board/:boardPart" element={<BoardRoute />} />
         </Route>
       </Routes>
     </BrowserRouter>

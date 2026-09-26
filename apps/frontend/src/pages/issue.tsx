@@ -5,7 +5,8 @@ import "./issue.css";
 export interface IssueModalProps {
   issue: Issue;
   currentUserName: string;
-  onAddComment: (issueId: string, text: string) => void;
+  onAddComment: (issueId: string, text: string) => Promise<void>;
+  onRefreshComments: (issueId: string) => Promise<void>;
   onClose: () => void;
 }
 
@@ -21,9 +22,12 @@ export default function IssueModal({
   issue,
   currentUserName,
   onAddComment,
+  onRefreshComments,
   onClose,
 }: IssueModalProps) {
   const [draft, setDraft] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const threadEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -38,12 +42,30 @@ export default function IssueModal({
     threadEndRef.current?.scrollIntoView({ block: "end" });
   }, [issue.comments.length]);
 
-  function handleSubmit(event: FormEvent) {
+  useEffect(() => {
+    const refresh = () => {
+      void onRefreshComments(issue.id).catch(() => undefined);
+    };
+    refresh();
+    const intervalId = window.setInterval(refresh, 3000);
+    return () => window.clearInterval(intervalId);
+  }, [issue.id, onRefreshComments]);
+
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     const text = draft.trim();
-    if (!text) return;
-    onAddComment(issue.id, text);
-    setDraft("");
+    if (!text || isSaving) return;
+
+    setSaveError("");
+    setIsSaving(true);
+    try {
+      await onAddComment(issue.id, text);
+      setDraft("");
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : "Unable to save comment.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -98,11 +120,13 @@ export default function IssueModal({
             placeholder={`Comment as ${currentUserName}`}
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
+            disabled={isSaving}
           />
-          <button type="submit" className="issue-modal__submit">
-            Send
+          <button type="submit" className="issue-modal__submit" disabled={isSaving}>
+            {isSaving ? "Sending..." : "Send"}
           </button>
         </form>
+        {saveError && <p className="issue-modal__error" role="alert">{saveError}</p>}
       </div>
     </div>
   );

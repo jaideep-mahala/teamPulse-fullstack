@@ -79,6 +79,12 @@
   color: var(--board-text-dim);
 }
 
+.board-error {
+  margin: 16px 24px 0;
+  color: #ff8f8f;
+  font-size: 0.9rem;
+}
+
 /* ---------- Columns layout ---------- */
 
 .board-columns {

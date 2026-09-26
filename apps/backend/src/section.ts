@@ -7,6 +7,43 @@ import { hasRole } from "../helper/hasRole";
 
 const router = express.Router();
 
+const defaultBoards = ["Frontend", "Backend", "DevOps"];
+const defaultSectionTitles = ["Upcoming", "In progress", "Done"];
+
+async function ensureDefaultBoards(orgId: string) {
+  const existingBoards = await prisma.boards.findMany({
+    where: { orgId, title: { in: defaultBoards } },
+    select: { id: true, title: true, section: { select: { title: true } } },
+  });
+  const boardsByTitle = new Map(existingBoards.map((board) => [board.title, board]));
+
+  await Promise.all(defaultBoards.map(async (title) => {
+    const board = boardsByTitle.get(title);
+    if (!board) {
+      await prisma.boards.create({
+        data: {
+          title,
+          orgId,
+          section: {
+            create: defaultSectionTitles.map((sectionTitle) => ({ title: sectionTitle })),
+          },
+        },
+        select: { id: true },
+      });
+      return;
+    }
+
+    const existingSectionTitles = new Set(board.section.map((section) => section.title));
+    await Promise.all(
+      defaultSectionTitles
+        .filter((sectionTitle) => !existingSectionTitles.has(sectionTitle))
+        .map((sectionTitle) =>
+          prisma.section.create({ data: { title: sectionTitle, boardId: board.id } }),
+        ),
+    );
+  }));
+}
+
 router.post(
   "/api/v1/section",
   authMiddleware,
@@ -135,6 +172,9 @@ router.get(
         error: "UNAUTHORIZED",
       });
     }
+
+    await ensureDefaultBoards(orgId);
+
     const boards = await prisma.boards.findMany({
       where: {
         orgId,

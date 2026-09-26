@@ -64,7 +64,7 @@ router.post(
 );
 
 router.get(
-  "/api/v1/issue/:sectionId",
+  "/api/v1/issue/section/:sectionId",
   authMiddleware,
   async (req: Request, res: Response) => {
     const userId = req.id;
@@ -85,7 +85,15 @@ router.get(
       },
       select: {
         id: true,
-        issue: true,
+        issue: {
+          include: {
+            comments: {
+              include: {
+                user: { select: { email: true } },
+              },
+            },
+          },
+        },
       },
     });
 
